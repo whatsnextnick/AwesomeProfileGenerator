@@ -21,3 +21,8 @@ I want to generate a webpage that displays my team's basic info
 so that I have quick access to emails and GitHub profiles
 ```
 
+## Terminal
+![Terminal](https://user-images.githubusercontent.com/40894714/113202782-3383d100-9239-11eb-8665-f638b269c120.jpg)
+
+## Browser
+![Browser](https://user-images.githubusercontent.com/40894714/113202841-472f3780-9239-11eb-9098-2e684ec1b0f6.jpg)
