@@ -11,25 +11,193 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+function createNewMember() {
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Please select the team member's rank:",
+          name: "rank",
+          choices: ["Manager", "Engineer", "Intern"]
+        }
+      ])
+      .then(function(response) {
+        let rank = response.rank;
+        switch (rank) {
+          case "Manager":
+            createManager();
+            break;
+          case "Engineer":
+            createEngineer();
+            break;
+          case "Intern":
+            createIntern();
+            break;
+          default:
+            console.log("There was an error, please restart the app.");
+        }
+      });
+  }
+  
+  createNewMember();
+  
+  function createManager() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Please enter the team member's name:"
+        },
+        {
+          type: "input",
+          name: "id",
+          message: "Please enter the team member's id:"
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "Please enter the team member's email:"
+        },
+        {
+          type: "input",
+          name: "officeNumber",
+          message: "Please enter the team member's office number:"
+        }
+      ])
+      .then(function(response) {
+        const newManager = new Manager(
+          response.name,
+          response.id,
+          response.email,
+          response.officeNumber
+        );
+        teamMembers.push(newManager);
+        //  console.log(teamMembers);
+        inquirer
+          .prompt({
+            type: "confirm",
+            name: "confirm",
+            message: "Do you want to create another member?"
+          })
+          .then(function(response) {
+            if (response.confirm) {
+              createNewMember();
+            } else {
+              let htmlData = render(teamMembers);
+              displayTeam(htmlData);
+            }
+          });
+      });
+  }
+  
+  function createEngineer() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Please enter the team member's name:"
+        },
+        {
+          type: "input",
+          name: "id",
+          message: "Please enter the team member's id:"
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "Please enter the team member's email:"
+        },
+        {
+          type: "input",
+          name: "github",
+          message: "Please enter the team member's GitHub username:"
+        }
+      ])
+      .then(function(response) {
+        const newEngineer = new Engineer(
+          response.name,
+          response.id,
+          response.email,
+          response.github
+        );
+        teamMembers.push(newEngineer);
+        //console.log(teamMembers);
+        inquirer
+          .prompt({
+            type: "confirm",
+            name: "confirm",
+            message: "Do you want to create another member?"
+          })
+          .then(function(response) {
+            if (response.confirm) {
+              createNewMember();
+            } else {
+              let htmlData = render(teamMembers);
+              displayTeam(htmlData);
+            }
+          });
+      });
+  }
+  
+  function createIntern() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Please enter the team member's name:"
+        },
+        {
+          type: "input",
+          name: "id",
+          message: "Please enter the team member's id:"
+        },
+        {
+          type: "input",
+          name: "email",
+          message: "Please enter the team member's email:"
+        },
+        {
+          type: "input",
+          name: "school",
+          message: "Please enter the team member's school name:"
+        }
+      ])
+      .then(function(response) {
+        const newIntern = new Intern(
+          response.name,
+          response.id,
+          response.email,
+          response.school
+        );
+        teamMembers.push(newIntern);
+        // console.log(teamMembers);
+        inquirer
+          .prompt({
+            type: "confirm",
+            name: "confirm",
+            message: "Do you want to create another member?"
+          })
+          .then(function(response) {
+            if (response.confirm) {
+              createNewMember();
+            } else {
+              let htmlData = render(teamMembers);
+              displayTeam(htmlData);
+            }
+          });
+      });
+  }
+  
+  function displayTeam(htmlData) {
+    fs.writeFile(outputPath, htmlData, function(err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log(
+        "Your Team Roster has been generated. Open 'team.html' in your browser to see it."
+      );
+    });
+  }
